@@ -1,26 +1,46 @@
+import axios from "axios";
 import React, { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { fetchTodos } from "../../redux/slice/todo";
+import { Link, useNavigate } from "react-router-dom";
+import { validateLogin } from "../../App/authe/loginValidation";
 
 export const Login = () => {
+  const [error, setError] = useState({});
+  const [loading, setLoading] = useState(false);
   const [form, setForm] = useState({
-    identifier: "",
+    email: "",
     password: "",
   });
 
-  const dispatch = useDispatch();
-  const state = useSelector((state) => state);
-
   const handleChange = (e) => {
-    setForm(e.target.name[e.target.value]);
+    const { name, value } = e.target;
+    setForm({ ...form, [name]: value });
   };
-
-  // console.log(state);
-
+  const navigate = useNavigate();
   const handleLogin = (e) => {
     e.preventDefault();
 
-    dispatch(fetchTodos({ form }));
+    setError(validateLogin(form));
+
+    if (Object.keys(validateLogin(form)).length === 0) {
+      setLoading(true);
+
+      axios
+        .post("http://localhost:1337/api/auth/local", {
+          identifier: form?.email,
+          password: form?.password,
+        })
+        .then((response) => {
+          if (response.data.jwt) {
+            localStorage.setItem("token", response.data.jwt);
+            navigate("/");
+            loading(true);
+          } else {
+            navigate("/login");
+          }
+
+          return response?.data;
+        });
+    }
   };
 
   return (
@@ -63,17 +83,21 @@ export const Login = () => {
               Log in
             </h2>
             <div className="mt-12">
-              <form>
+              <form onSubmit={handleLogin}>
                 <div>
                   <div className="text-sm font-bold text-gray-700 tracking-wide">
                     Email Address
                   </div>
                   <input
                     className="w-full text-lg py-2 border-b border-gray-300 focus:outline-none focus:border-indigo-500"
-                    name="identifier"
-                    placeholder="mike@gmail.com"
+                    name="email"
+                    value={form.email}
+                    placeholder="mike@gmail.com "
                     onChange={handleChange}
                   />
+                  {error.email && (
+                    <p className="text-sm mt-3 text-red-500">{error.email}</p>
+                  )}
                 </div>
                 <div className="mt-8">
                   <div className="flex justify-between items-center">
@@ -96,6 +120,11 @@ export const Login = () => {
                     value={form?.password}
                     onChange={handleChange}
                   />
+                  {error.password && (
+                    <p className="text-sm mt-3 text-red-500">
+                      {error.password}
+                    </p>
+                  )}
                 </div>
                 <div className="mt-10">
                   <button
@@ -110,9 +139,12 @@ export const Login = () => {
               </form>
               <div className="mt-12 text-sm font-display font-semibold text-gray-700 text-center">
                 Don't have an account ?{" "}
-                <a className="cursor-pointer text-indigo-600 hover:text-indigo-800">
-                  Sign up
-                </a>
+                <Link
+                  to="/register"
+                  className="cursor-pointer text-indigo-600 hover:text-indigo-800"
+                >
+                  Sign Up
+                </Link>
               </div>
             </div>
           </div>

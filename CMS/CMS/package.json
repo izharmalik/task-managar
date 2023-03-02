@@ -1,5 +1,5 @@
 {
-  "name": "my-project",
+  "name": "cms",
   "private": true,
   "version": "0.1.0",
   "description": "A Strapi application",
@@ -20,7 +20,7 @@
     "name": "A Strapi developer"
   },
   "strapi": {
-    "uuid": "52ed85d0-72cb-40bc-9ac4-92ffe86db952"
+    "uuid": "425a7767-782f-4fea-aba2-2e29b8dc7251"
   },
   "engines": {
     "node": ">=14.19.1 <=18.x.x",
