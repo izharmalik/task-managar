@@ -12,7 +12,7 @@ export const validateRegister = ({ username, email, password }) => {
   const passwordValidation = checkPassword(password);
 
   if (!username) {
-    errors.username = "Username name is empty.";
+    errors.username = "Please Enter Valid Username.";
   } else if (checkEmptySpaces(username)) {
     errors.username = "Remove empty spaces.";
   } else if (userNameValidation.error) {
@@ -24,7 +24,7 @@ export const validateRegister = ({ username, email, password }) => {
   }
 
   if (!password) {
-    errors.password = "Password cannot be empty.";
+    errors.password = "Please Enter Valid Password.";
   } else if (checkEmptySpaces(password)) {
     errors.password = "Password cannot have spaces.";
   } else if (password.length < 8) {

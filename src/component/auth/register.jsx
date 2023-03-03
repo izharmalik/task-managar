@@ -2,15 +2,21 @@ import axios from "axios";
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { validateRegister } from "../../App/authe/validation";
+import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 
 export const Register = () => {
   const [error, setError] = useState({});
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
   const [form, setForm] = useState({
     username: "",
     email: "",
     password: "",
   });
+
+  const handleShowPassword = () => {
+    setShowPassword(!showPassword);
+  };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -133,13 +139,26 @@ export const Register = () => {
                         </a>
                       </div>
                     </div>
-                    <input
-                      className="w-full text-lg py-2 border-b border-gray-300 focus:outline-none focus:border-indigo-500"
-                      name="password"
-                      placeholder="Enter your password"
-                      value={form?.password}
-                      onChange={handleChange}
-                    />
+                    <div>
+                      <input
+                        type={`${showPassword ? "text" : "password"}`}
+                        className="w-full text-lg py-2 border-b border-gray-300 focus:outline-none focus:border-indigo-500"
+                        name="password"
+                        placeholder="Enter your password"
+                        value={form?.password}
+                        onChange={handleChange}
+                      />
+                      <div
+                        className="absolute right-4 top-10 cursor-pointer"
+                        onClick={handleShowPassword}
+                      >
+                        {showPassword ? (
+                          <AiOutlineEyeInvisible className="text-xl text-slate-600" />
+                        ) : (
+                          <AiOutlineEye className="text-xl text-slate-600" />
+                        )}
+                      </div>
+                    </div>
                     {error.password && (
                       <p className="text-sm mt-3 text-red-500">
                         {error.password}

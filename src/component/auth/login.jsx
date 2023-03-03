@@ -33,15 +33,13 @@ export const Login = () => {
           if (response.data.jwt) {
             localStorage.setItem("token", response.data.jwt);
             navigate("/");
-            loading(true);
-          } else {
-            navigate("/login");
           }
-
-          return response?.data;
+          setForm(response?.data);
         });
     }
   };
+
+  console.log(form);
 
   return (
     <body>

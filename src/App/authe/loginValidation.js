@@ -14,7 +14,7 @@ export const validateLogin = ({ email, password }) => {
   }
 
   if (!password) {
-    errors.password = "Password cannot be empty.";
+    errors.password = "Please Enter Valid Password.";
   } else if (checkEmptySpaces(password)) {
     errors.password = "Password cannot have spaces.";
   } else if (password.length < 8) {
