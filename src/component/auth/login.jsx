@@ -3,19 +3,32 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { validateLogin } from "../../App/authe/loginValidation";
 
+import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
+import { useAppContext } from "../../Store/store";
+import { toast } from "react-hot-toast";
+
 export const Login = () => {
   const [error, setError] = useState({});
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const { setAuthContext, authContext } = useAppContext();
+
   const [form, setForm] = useState({
     email: "",
     password: "",
   });
 
+  const handleShowPassword = () => {
+    setShowPassword(!showPassword);
+  };
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setForm({ ...form, [name]: value });
   };
+
   const navigate = useNavigate();
+
   const handleLogin = (e) => {
     e.preventDefault();
 
@@ -25,16 +38,30 @@ export const Login = () => {
       setLoading(true);
 
       axios
-        .post("http://localhost:1337/api/auth/local", {
+        .post(`${process.env.REACT_APP_BASEURL}/auth/local`, {
           identifier: form?.email,
           password: form?.password,
         })
         .then((response) => {
-          if (response.data.jwt) {
-            localStorage.setItem("token", response.data.jwt);
-            navigate("/");
-          }
-          setForm(response?.data);
+          setForm(response.data);
+          console.log(response.data);
+          console.log(form);
+          setAuthContext({
+            ...form?.user,
+            isAuthenticated: true,
+          });
+          localStorage.setItem(
+            "userAuth",
+            JSON.stringify({
+              ...form?.user,
+              isAuthenticated: true,
+            })
+          );
+          toast.success("Login successful");
+        })
+        .catch((error) => {
+          setLoading(false);
+          toast.error("incorrect login or password");
         });
     }
   };
@@ -42,7 +69,7 @@ export const Login = () => {
   console.log(form);
 
   return (
-    <body>
+    <>
       <div className="lg:flex">
         <div className="lg:w-1/2 xl:max-w-screen-sm">
           <div className="py-12 bg-indigo-100 lg:bg-white flex justify-center lg:justify-start lg:px-12">
@@ -103,21 +130,35 @@ export const Login = () => {
                       Password
                     </div>
                     <div>
-                      <a
+                      <Link
+                        to="/forgot-password"
                         className="text-xs font-display font-semibold text-indigo-600 hover:text-indigo-800
                                         cursor-pointer"
                       >
                         Forgot Password?
-                      </a>
+                      </Link>
                     </div>
                   </div>
-                  <input
-                    className="w-full text-lg py-2 border-b border-gray-300 focus:outline-none focus:border-indigo-500"
-                    name="password"
-                    placeholder="Enter your password"
-                    value={form?.password}
-                    onChange={handleChange}
-                  />
+                  <div className="relative">
+                    <input
+                      type={`${showPassword ? "text" : "password"}`}
+                      className="w-full text-lg py-2 border-b border-gray-300 focus:outline-none focus:border-indigo-500"
+                      name="password"
+                      placeholder="Enter your password"
+                      value={form?.password}
+                      onChange={handleChange}
+                    />
+                    <div
+                      className="absolute right-4 top-3 cursor-pointer"
+                      onClick={handleShowPassword}
+                    >
+                      {showPassword ? (
+                        <AiOutlineEyeInvisible className="text-xl text-slate-600" />
+                      ) : (
+                        <AiOutlineEye className="text-xl text-slate-600" />
+                      )}
+                    </div>
+                  </div>
                   {error.password && (
                     <p className="text-sm mt-3 text-red-500">
                       {error.password}
@@ -348,6 +389,6 @@ export const Login = () => {
           </div>
         </div>
       </div>
-    </body>
+    </>
   );
 };

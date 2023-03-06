@@ -1,21 +1,18 @@
 import "./App.css";
-import { Layout } from "./component/layout";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
-import { Dashboard } from "./pages/dashboard";
-import { Login } from "./component/auth/login";
-import { Register } from "./component/auth/register";
+import { BrowserRouter } from "react-router-dom";
+import { AllRoutes } from "./Routes";
+import { useAppContext } from "./Store/store.jsx";
+import { Toast } from "bootstrap";
+import { ToastAlert } from "./App/Common/UI/ToasterAlert";
 
 function App() {
+  const { authContext } = useAppContext();
+
   return (
-    <Layout>
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Dashboard />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
-        </Routes>
-      </BrowserRouter>
-    </Layout>
+    <BrowserRouter>
+      <ToastAlert />
+      <AllRoutes userAuth={authContext?.isAuthenticated} />
+    </BrowserRouter>
   );
 }
 

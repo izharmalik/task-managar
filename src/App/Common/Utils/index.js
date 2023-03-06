@@ -8,10 +8,10 @@ export const validateEmail = (email) => {
 };
 
 export const checkForAlphabets = (alphabets) => {
-  const regex = /^[a-zA-Z]+$/;
+  const regex = /^[a-zA-Z0-9]([._-](?![._-])|[a-zA-Z0-9]){3,18}[a-zA-Z0-9]$/;
 
   if (!regex.test(alphabets))
-    return { error: true, message: "Only alphabets allowed." };
+    return { error: true, message: "Only Use Number and Alphabets." };
   else return false;
 };
 

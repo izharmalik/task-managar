@@ -3,11 +3,17 @@ import ReactDOM from "react-dom/client";
 import "./index.css";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
+import { AppWrapper } from "./Store/store.jsx";
+import { HelmetProvider } from "react-helmet-async";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
-    <App />
+    <AppWrapper>
+      <HelmetProvider>
+        <App />
+      </HelmetProvider>
+    </AppWrapper>
   </React.StrictMode>
 );
 
