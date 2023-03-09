@@ -37,27 +37,27 @@ export const Register = () => {
       setLoading(true);
 
       axios
-        .post(`${process.env.REACT_APP_BASEURL}/auth/local/register`, {
-          username: form.username,
+        .post(`${process.env.REACT_APP_URL}/auth/signup`, {
+          name: form.username,
           email: form.email,
           password: form.password,
         })
         .then((res) => {
-          console.log(res);
+          // console.log(res.data);
           setForm(res?.data);
           setLoading(false);
           setAuthContext({
-            ...form?.user,
-            isAuthenticated: form?.isAuthenticated,
+            ...res.data,
+            isAuthenticated: res.data?.isAuthenticated,
           });
           localStorage.setItem(
             "userAuth",
             JSON.stringify({
-              ...form?.user,
-              isAuthenticated: form?.isAuthenticated,
+              ...res.data,
+              isAuthenticated: res.data?.isAuthenticated,
             })
           );
-          toast.success("Account was Created");
+          toast.success(res?.data?.message);
           navigate("/login");
         })
         .catch((error) => {

@@ -1,9 +1,10 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { useAppContext } from "../../Store/store";
+import logo from "../../Assets/logo1.png";
 
 export const Header = () => {
-  const { authContext, setAuthContext, userUpdated } = useAppContext();
+  const { authContext, setAuthContext } = useAppContext();
 
   const handleLogout = () => {
     localStorage.clear("userAuth");
@@ -13,14 +14,14 @@ export const Header = () => {
   return (
     <nav className="bg-white border-gray-200 px-2 sm:px-4 py-2.5 rounded dark:bg-gray-900">
       <div className="container flex flex-wrap items-center justify-between mx-auto">
-        <a href="https://flowbite.com/" className="flex items-center">
+        <a href="#" className="flex items-center">
           <img
-            src="https://flowbite.com/docs/images/logo.svg"
-            className="h-6 mr-3 sm:h-9"
-            alt="Flowbite Logo"
+            src={logo}
+            className=" h-16 w-16 rounded-full mr-3 "
+            alt="Logo"
           />
           <span className="self-center text-xl font-semibold whitespace-nowrap dark:text-white">
-            Flowbite
+            Malik Infotech
           </span>
         </a>
         <button
@@ -81,12 +82,13 @@ export const Header = () => {
               </a>
             </li>
             <li>
-              <a
+              <Link
+                to="/profile"
                 href="#"
                 className="block py-2 pl-3 pr-4 text-gray-700 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-gray-400 md:dark:hover:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent"
               >
-                Contact
-              </a>
+                Profile
+              </Link>
             </li>
             <li>
               <a

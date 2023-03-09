@@ -16,7 +16,7 @@ export const ForgotPassword = () => {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    form?.success && NavigateTo("/login");
+    form?.status === 200 && NavigateTo("/login");
   }, [form]);
 
   useEffect(() => {
@@ -38,25 +38,24 @@ export const ForgotPassword = () => {
       setLoading(true);
 
       axios
-        .post(`${process.env.REACT_APP_BASEURL}/auth/forgot-password`, {
+        .post(`${process.env.REACT_APP_URL}/auth/request-forgot-password`, {
           email: form?.email,
         })
         .then((res) => {
-          console.log(res?.data);
-          setForm(res?.data);
+          setForm(res);
           setLoading(false);
           setAuthContext({
-            ...form?.user,
+            ...form.data,
             isAuthenticated: form?.isAuthenticated,
           });
           localStorage.setItem(
             "userAuth",
             JSON.stringify({
-              ...form?.user,
+              ...form.data,
               isAuthenticated: form?.isAuthenticated,
             })
           );
-          toast.success("check link on your email");
+          toast.success(res?.data?.message);
         })
         .catch((error) => {
           setLoading(false);

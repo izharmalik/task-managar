@@ -27,8 +27,6 @@ export const Login = () => {
     setForm({ ...form, [name]: value });
   };
 
-  const navigate = useNavigate();
-
   const handleLogin = (e) => {
     e.preventDefault();
 
@@ -38,22 +36,21 @@ export const Login = () => {
       setLoading(true);
 
       axios
-        .post(`${process.env.REACT_APP_BASEURL}/auth/local`, {
-          identifier: form?.email,
+        .post(`${process.env.REACT_APP_URL}/auth/signin`, {
+          email: form?.email,
           password: form?.password,
         })
         .then((response) => {
-          setForm(response.data);
           console.log(response.data);
-          console.log(form);
+          setForm(response.data);
           setAuthContext({
-            ...form?.user,
+            ...response.data,
             isAuthenticated: true,
           });
           localStorage.setItem(
             "userAuth",
             JSON.stringify({
-              ...form?.user,
+              ...response.data,
               isAuthenticated: true,
             })
           );

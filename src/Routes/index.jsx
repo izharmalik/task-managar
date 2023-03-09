@@ -8,6 +8,8 @@ import { PublicRoute } from "./Public";
 import { Navigate } from "react-router-dom";
 import { AboutPage } from "../pages/about";
 import { ForgotPassword } from "../component/auth/Forgot";
+import { ResetPassword } from "../component/auth/Reset";
+import { ProfilePage } from "../pages/profile";
 
 export const AllRoutes = (props) => {
   return (
@@ -29,6 +31,16 @@ export const AllRoutes = (props) => {
           </PrivateRoutes>
         }
       />
+
+      <Route
+        path="/profile"
+        element={
+          <PrivateRoutes>
+            <ProfilePage />
+          </PrivateRoutes>
+        }
+      />
+
       <Route
         path="/register"
         element={
@@ -50,6 +62,15 @@ export const AllRoutes = (props) => {
         element={
           <PublicRoute>
             <ForgotPassword restricted={props.userAuth} />
+          </PublicRoute>
+        }
+      />
+
+      <Route
+        path="/reset-password"
+        element={
+          <PublicRoute>
+            <ResetPassword restricted={props.userAuth} />
           </PublicRoute>
         }
       />

@@ -1,4 +1,5 @@
 import React from "react";
+import logo from "../../Assets/logo1.png";
 
 export const Footer = () => {
   return (
@@ -9,9 +10,9 @@ export const Footer = () => {
           className="flex items-center mb-4 sm:mb-0"
         >
           <img
-            src="https://flowbite.com/docs/images/logo.svg"
-            className="h-8 mr-3"
-            alt="Flowbite Logo"
+            src={logo}
+            className=" h-16 w-16 rounded-full mr-3 "
+            alt="Logo"
           />
           <span className="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">
             Flowbite
