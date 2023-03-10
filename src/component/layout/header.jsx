@@ -1,16 +1,19 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useAppContext } from "../../Store/store";
 import logo from "../../Assets/logo1.png";
 
 export const Header = () => {
-  const { authContext, setAuthContext } = useAppContext();
+  const [image, setImage] = useState();
+  const { authContext, setAuthContext, userUpdated, setUserUpdated } =
+    useAppContext();
 
   const handleLogout = () => {
     localStorage.clear("userAuth");
     setAuthContext();
   };
 
+  console.log(userUpdated?.avatar?.url, "h");
   return (
     <nav className="bg-white border-gray-200 px-2 sm:px-4 py-2.5 rounded dark:bg-gray-900">
       <div className="container flex flex-wrap items-center justify-between mx-auto">
@@ -82,15 +85,6 @@ export const Header = () => {
               </a>
             </li>
             <li>
-              <Link
-                to="/profile"
-                href="#"
-                className="block py-2 pl-3 pr-4 text-gray-700 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-gray-400 md:dark:hover:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent"
-              >
-                Profile
-              </Link>
-            </li>
-            <li>
               <a
                 href="#"
                 className="block py-2 pl-3 pr-4 text-gray-700 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-gray-400 md:dark:hover:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent"
@@ -98,6 +92,19 @@ export const Header = () => {
               >
                 Logout
               </a>
+            </li>
+            <li>
+              <Link
+                to="/profile"
+                href="#"
+                className="flex gap-3 py-2 pl-3  pr-4 text-gray-700 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-gray-400 md:dark:hover:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent"
+              >
+                <img
+                  src={userUpdated?.avatar?.url}
+                  className="w-10 h-10  rounded-full  align-center  "
+                />
+                <p className=" ">{authContext.name}</p>
+              </Link>
             </li>
           </ul>
         </div>

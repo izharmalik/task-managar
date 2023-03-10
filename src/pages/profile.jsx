@@ -1,12 +1,14 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useAppContext } from "../Store/store";
-import gamer from "../Assets/Naruto.jpg";
+import naruto from "../Assets/Naruto.jpg";
 import { toast } from "react-hot-toast";
 
 export const ProfilePage = () => {
-  const { authContext, setAuthContext } = useAppContext();
+  const { authContext, setAuthContext, userUpdated, setUserUpdated } =
+    useAppContext();
   const [file, setFile] = useState();
+  const [image, setImage] = useState();
 
   const [form, setForm] = useState({
     name: "",
@@ -35,51 +37,57 @@ export const ProfilePage = () => {
 
   const handleImageChange = (e) => {
     setFile(URL.createObjectURL(e.target.files[0]));
+    setImage(e.target.files[0]);
   };
 
   function handleSubmit(e) {
     e.preventDefault();
+
+    const formData = new FormData();
+    formData.append("userId", authContext?.userId);
+    formData.append("token", authContext?.token);
+    formData.append("name", form?.name);
+    formData.append("email", form?.email);
+    formData.append("oldPassword", form?.oldPassword);
+    formData.append("newPassword", form?.newPassword);
+    formData.append("gender", form?.gender);
+    formData.append("avatar", image);
+
     axios
-      .post(`${process.env.REACT_APP_URL}/app/dashboard/edit-user`, {
-        userId: authContext?.userId,
-        token: authContext?.token,
-        name: form?.name,
-        email: form?.email,
-        oldPassword: form?.oldPassword,
-        newPassword: form?.newPassword,
-        gender: form?.gender,
-        avatar: form?.avatar,
-      })
+      .post(`${process.env.REACT_APP_URL}/app/dashboard/edit-user`, formData)
       .then((res) => {
-        console.log(res);
         setForm(res?.data);
+        setUserUpdated({
+          ...res?.data,
+        });
+        localStorage.setItem(
+          "userAuth",
+          JSON.stringify({
+            ...res.data,
+          })
+        );
         toast.success(res?.data?.message);
       });
   }
 
-  console.log(form);
-
+  console.log(userUpdated, ">>>>>>>>>");
   return (
     <>
       <div className="h-full">
         <form onSubmit={handleSubmit}>
           <div className="border-b-2 block md:flex">
             <div className="w-full md:w-2/5 p-4 sm:p-6 lg:p-8 bg-white shadow-md">
-              <div className="flex justify-between">
-                <span className="text-xl font-semibold block">
-                  Admin Profile
-                </span>
-              </div>
-
               <div className="w-full p-8 mx-2 flex justify-center">
-                <div className="bg-white p-3 absolute b-10">
-                  <img src={file ? file : gamer} className="h-full w-full" />
-                </div>
                 <label
                   htmlFor="UploadPicture"
-                  className="  relative w-full text-center btn py-3 px-4 border rounded-md shadow-lg text-sm text-blue-600 active:shadow-lg transition duration-300 ease-in-out hover:bg-blue-600 hover:text-white cursor-pointer font-medium bg-white"
+                  className="absolute  rounded-full text-center   border shadow-lg text-sm  active:shadow-lg transition duration-300 ease-in-out   cursor-pointer font-medium bg-white"
                 >
-                  Upload Picture
+                  <div className="bg-white w-96  relative b-10">
+                    <img
+                      src={form.avatar.url ? form.avatar.url : naruto}
+                      className="h-96 w-full rounded-full"
+                    />
+                  </div>
                   <input
                     type="file"
                     id="UploadPicture"
